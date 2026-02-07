@@ -20,7 +20,14 @@ import {
   SCREEN_PADDING,
   CARD_PADDING,
 } from "@/src/theme/layout";
-import { usePropertiesStore, useUnitsStore, useGuestsStore, addGuest, updateGuest, getGuest } from "@/src/store";
+import {
+  usePropertiesStore,
+  useUnitsStore,
+  useGuestsStore,
+  addGuest,
+  updateGuest,
+  getGuest,
+} from "@/src/store";
 import { GUEST_SOURCES, PAYMENT_STATUSES } from "@/src/types/models";
 import type { GuestSource, PaymentStatus } from "@/src/types/models";
 
@@ -60,7 +67,9 @@ export default function AddGuestScreen() {
   const [price, setPrice] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [datePickerMode, setDatePickerMode] = useState<"checkIn" | "checkOut" | null>(null);
+  const [datePickerMode, setDatePickerMode] = useState<
+    "checkIn" | "checkOut" | null
+  >(null);
   const [editLoaded, setEditLoaded] = useState(false);
 
   useEffect(() => {
@@ -103,7 +112,11 @@ export default function AddGuestScreen() {
   const formatDateLabel = useCallback((yyyyMmDd: string) => {
     if (!yyyyMmDd || yyyyMmDd.length < 10) return "Tap to pick";
     const d = new Date(yyyyMmDd + "T12:00:00");
-    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    return d.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
   }, []);
   const sectionTops = useRef<Record<string, number>>({});
   const scrollToSection = useCallback((key: string) => {
@@ -161,9 +174,20 @@ export default function AddGuestScreen() {
 
   if (isEditMode && !editLoaded) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: "center", alignItems: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={{ marginTop: 12, fontSize: 16, color: colors.textSecondary }}>Loading guest…</Text>
+        <Text
+          style={{ marginTop: 12, fontSize: 16, color: colors.textSecondary }}
+        >
+          Loading guest…
+        </Text>
       </View>
     );
   }
@@ -186,7 +210,10 @@ export default function AddGuestScreen() {
         source,
         notes: notes.trim(),
         paymentStatus,
-        price: typeof priceNum === "number" && !Number.isNaN(priceNum) ? priceNum : undefined,
+        price:
+          typeof priceNum === "number" && !Number.isNaN(priceNum)
+            ? priceNum
+            : undefined,
       };
       if (isEditMode && guestId) {
         await updateGuest(guestId, payload);
@@ -310,110 +337,71 @@ export default function AddGuestScreen() {
         <ScrollView
           ref={scrollRef}
           style={StyleSheet.absoluteFill}
-          contentContainerStyle={[stylesWithTheme.scroll, stylesWithTheme.scrollContent]}
+          contentContainerStyle={[
+            stylesWithTheme.scroll,
+            stylesWithTheme.scrollContent,
+          ]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={true}
           bounces={true}
         >
-        {error ? <Text style={stylesWithTheme.errorText}>{error}</Text> : null}
-
-        <View
-          style={stylesWithTheme.card}
-          onLayout={(e) => {
-            sectionTops.current["fullName"] = e.nativeEvent.layout.y;
-          }}
-        >
-          <Text style={stylesWithTheme.label}>Full name *</Text>
-          <TextInput
-            style={stylesWithTheme.input}
-            value={fullName}
-            onChangeText={setFullName}
-            onFocus={() => scrollToSection("fullName")}
-            placeholder="Guest full name"
-            placeholderTextColor={colors.textSecondary}
-            autoCapitalize="words"
-            editable={!saving}
-          />
-        </View>
-
-        <View
-          style={stylesWithTheme.card}
-          onLayout={(e) => {
-            sectionTops.current["property"] = e.nativeEvent.layout.y;
-          }}
-        >
-          <Text style={stylesWithTheme.label}>Property *</Text>
-          <View style={stylesWithTheme.pickerRow}>
-            {properties.map((p) => (
-              <TouchableOpacity
-                key={p.id}
-                style={[
-                  stylesWithTheme.pickerOption,
-                  propertyId === p.id && stylesWithTheme.pickerOptionSelected,
-                ]}
-                onPress={() => {
-                  setPropertyId(p.id);
-                  setUnitId("");
-                }}
-                disabled={saving}
-              >
-                <Text
-                  style={[
-                    stylesWithTheme.pickerOptionText,
-                    propertyId === p.id &&
-                      stylesWithTheme.pickerOptionTextSelected,
-                  ]}
-                >
-                  {p.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          {properties.length === 0 ? (
-            <Text
-              style={{
-                fontSize: 14,
-                color: colors.textSecondary,
-                marginTop: 4,
-              }}
-            >
-              No properties. Add properties in Firebase first.
-            </Text>
+          {error ? (
+            <Text style={stylesWithTheme.errorText}>{error}</Text>
           ) : null}
-        </View>
 
-        {propertyId && unitsForProperty.length !== 1 ? (
           <View
             style={stylesWithTheme.card}
             onLayout={(e) => {
-              sectionTops.current["unit"] = e.nativeEvent.layout.y;
+              sectionTops.current["fullName"] = e.nativeEvent.layout.y;
             }}
           >
-            <Text style={stylesWithTheme.label}>Unit *</Text>
+            <Text style={stylesWithTheme.label}>Full name *</Text>
+            <TextInput
+              style={stylesWithTheme.input}
+              value={fullName}
+              onChangeText={setFullName}
+              onFocus={() => scrollToSection("fullName")}
+              placeholder="Guest full name"
+              placeholderTextColor={colors.textSecondary}
+              autoCapitalize="words"
+              editable={!saving}
+            />
+          </View>
+
+          <View
+            style={stylesWithTheme.card}
+            onLayout={(e) => {
+              sectionTops.current["property"] = e.nativeEvent.layout.y;
+            }}
+          >
+            <Text style={stylesWithTheme.label}>Property *</Text>
             <View style={stylesWithTheme.pickerRow}>
-              {unitsForProperty.map((u) => (
+              {properties.map((p) => (
                 <TouchableOpacity
-                  key={u.id}
+                  key={p.id}
                   style={[
                     stylesWithTheme.pickerOption,
-                    unitId === u.id && stylesWithTheme.pickerOptionSelected,
+                    propertyId === p.id && stylesWithTheme.pickerOptionSelected,
                   ]}
-                  onPress={() => setUnitId(u.id)}
+                  onPress={() => {
+                    setPropertyId(p.id);
+                    setUnitId("");
+                  }}
                   disabled={saving}
                 >
                   <Text
                     style={[
                       stylesWithTheme.pickerOptionText,
-                      unitId === u.id &&
+                      propertyId === p.id &&
                         stylesWithTheme.pickerOptionTextSelected,
                     ]}
                   >
-                    {u.name}
+                    {p.name}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
-            {unitsForProperty.length === 0 ? (
+            {properties.length === 0 ? (
               <Text
                 style={{
                   fontSize: 14,
@@ -421,80 +409,129 @@ export default function AddGuestScreen() {
                   marginTop: 4,
                 }}
               >
-                No units for this property.
+                No properties. Add properties in Firebase first.
               </Text>
             ) : null}
           </View>
-        ) : null}
 
-        <View
-          style={stylesWithTheme.card}
-          onLayout={(e) => {
-            sectionTops.current["dates"] = e.nativeEvent.layout.y;
-          }}
-        >
-          <Text style={stylesWithTheme.label}>Stay (check-in – check-out)</Text>
-          <View style={stylesWithTheme.datesRow}>
-            <TouchableOpacity
-              style={[stylesWithTheme.input, stylesWithTheme.dateInput, stylesWithTheme.dateTouchable]}
-              onPress={() => {
-                scrollToSection("dates");
-                setDatePickerMode("checkIn");
+          {propertyId && unitsForProperty.length !== 1 ? (
+            <View
+              style={stylesWithTheme.card}
+              onLayout={(e) => {
+                sectionTops.current["unit"] = e.nativeEvent.layout.y;
               }}
-              disabled={saving}
             >
-              <Text style={[stylesWithTheme.dateTouchableText, !checkIn && stylesWithTheme.datePlaceholder]}>
-                {formatDateLabel(checkIn)}
-              </Text>
-            </TouchableOpacity>
-            <Text style={stylesWithTheme.datesSeparator}>–</Text>
-            <TouchableOpacity
-              style={[stylesWithTheme.input, stylesWithTheme.dateInput, stylesWithTheme.dateTouchable]}
-              onPress={() => {
-                scrollToSection("dates");
-                setDatePickerMode("checkOut");
-              }}
-              disabled={saving}
-            >
-              <Text style={[stylesWithTheme.dateTouchableText, !checkOut && stylesWithTheme.datePlaceholder]}>
-                {formatDateLabel(checkOut)}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {datePickerMode && (
-            Platform.OS === "android" ? (
-              <DateTimePicker
-                value={datePickerMode === "checkIn" ? new Date(checkIn + "T12:00:00") : new Date(checkOut + "T12:00:00")}
-                mode="date"
-                minimumDate={datePickerMode === "checkOut" ? new Date(checkIn + "T12:00:00") : undefined}
-                onChange={(event: { type: string }, date?: Date) => {
-                  if (Platform.OS === "android" && event.type !== "set") {
-                    setDatePickerMode(null);
-                    return;
-                  }
-                  if (date) {
-                    const next = date.toISOString().slice(0, 10);
-                    if (datePickerMode === "checkIn") {
-                      setCheckIn(next);
-                      if (checkOut && next >= checkOut) {
-                        const d = new Date(date);
-                        d.setDate(d.getDate() + 1);
-                        setCheckOut(d.toISOString().slice(0, 10));
-                      }
-                    } else {
-                      setCheckOut(next);
-                    }
-                  }
-                  setDatePickerMode(null);
+              <Text style={stylesWithTheme.label}>Unit *</Text>
+              <View style={stylesWithTheme.pickerRow}>
+                {unitsForProperty.map((u) => (
+                  <TouchableOpacity
+                    key={u.id}
+                    style={[
+                      stylesWithTheme.pickerOption,
+                      unitId === u.id && stylesWithTheme.pickerOptionSelected,
+                    ]}
+                    onPress={() => setUnitId(u.id)}
+                    disabled={saving}
+                  >
+                    <Text
+                      style={[
+                        stylesWithTheme.pickerOptionText,
+                        unitId === u.id &&
+                          stylesWithTheme.pickerOptionTextSelected,
+                      ]}
+                    >
+                      {u.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              {unitsForProperty.length === 0 ? (
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: colors.textSecondary,
+                    marginTop: 4,
+                  }}
+                >
+                  No units for this property.
+                </Text>
+              ) : null}
+            </View>
+          ) : null}
+
+          <View
+            style={stylesWithTheme.card}
+            onLayout={(e) => {
+              sectionTops.current["dates"] = e.nativeEvent.layout.y;
+            }}
+          >
+            <Text style={stylesWithTheme.label}>
+              Stay (check-in – check-out)
+            </Text>
+            <View style={stylesWithTheme.datesRow}>
+              <TouchableOpacity
+                style={[
+                  stylesWithTheme.input,
+                  stylesWithTheme.dateInput,
+                  stylesWithTheme.dateTouchable,
+                ]}
+                onPress={() => {
+                  scrollToSection("dates");
+                  setDatePickerMode("checkIn");
                 }}
-              />
-            ) : (
-              <View style={stylesWithTheme.datePickerInlineWrap}>
+                disabled={saving}
+              >
+                <Text
+                  style={[
+                    stylesWithTheme.dateTouchableText,
+                    !checkIn && stylesWithTheme.datePlaceholder,
+                  ]}
+                >
+                  {formatDateLabel(checkIn)}
+                </Text>
+              </TouchableOpacity>
+              <Text style={stylesWithTheme.datesSeparator}>–</Text>
+              <TouchableOpacity
+                style={[
+                  stylesWithTheme.input,
+                  stylesWithTheme.dateInput,
+                  stylesWithTheme.dateTouchable,
+                ]}
+                onPress={() => {
+                  scrollToSection("dates");
+                  setDatePickerMode("checkOut");
+                }}
+                disabled={saving}
+              >
+                <Text
+                  style={[
+                    stylesWithTheme.dateTouchableText,
+                    !checkOut && stylesWithTheme.datePlaceholder,
+                  ]}
+                >
+                  {formatDateLabel(checkOut)}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {datePickerMode &&
+              (Platform.OS === "android" ? (
                 <DateTimePicker
-                  value={datePickerMode === "checkIn" ? new Date(checkIn + "T12:00:00") : new Date(checkOut + "T12:00:00")}
+                  value={
+                    datePickerMode === "checkIn"
+                      ? new Date(checkIn + "T12:00:00")
+                      : new Date(checkOut + "T12:00:00")
+                  }
                   mode="date"
-                  minimumDate={datePickerMode === "checkOut" ? new Date(checkIn + "T12:00:00") : undefined}
-                  onChange={(_: { type: string }, date?: Date) => {
+                  minimumDate={
+                    datePickerMode === "checkOut"
+                      ? new Date(checkIn + "T12:00:00")
+                      : undefined
+                  }
+                  onChange={(event: { type: string }, date?: Date) => {
+                    if (Platform.OS === "android" && event.type !== "set") {
+                      setDatePickerMode(null);
+                      return;
+                    }
                     if (date) {
                       const next = date.toISOString().slice(0, 10);
                       if (datePickerMode === "checkIn") {
@@ -510,122 +547,155 @@ export default function AddGuestScreen() {
                     }
                     setDatePickerMode(null);
                   }}
-                  style={stylesWithTheme.datePickerInline}
                 />
-              </View>
-            )
-          )}
-        </View>
-
-        <View style={stylesWithTheme.card}>
-          <Text style={stylesWithTheme.label}>Booking source</Text>
-          <View style={stylesWithTheme.pickerRow}>
-            {GUEST_SOURCES.map((s) => (
-              <TouchableOpacity
-                key={s}
-                style={[
-                  stylesWithTheme.pickerOption,
-                  source === s && stylesWithTheme.pickerOptionSelected,
-                ]}
-                onPress={() => setSource(s)}
-                disabled={saving}
-              >
-                <Text
-                  style={[
-                    stylesWithTheme.pickerOptionText,
-                    source === s && stylesWithTheme.pickerOptionTextSelected,
-                  ]}
-                >
-                  {s}
-                </Text>
-              </TouchableOpacity>
-            ))}
+              ) : (
+                <View style={stylesWithTheme.datePickerInlineWrap}>
+                  <DateTimePicker
+                    value={
+                      datePickerMode === "checkIn"
+                        ? new Date(checkIn + "T12:00:00")
+                        : new Date(checkOut + "T12:00:00")
+                    }
+                    mode="date"
+                    minimumDate={
+                      datePickerMode === "checkOut"
+                        ? new Date(checkIn + "T12:00:00")
+                        : undefined
+                    }
+                    onChange={(_: { type: string }, date?: Date) => {
+                      if (date) {
+                        const next = date.toISOString().slice(0, 10);
+                        if (datePickerMode === "checkIn") {
+                          setCheckIn(next);
+                          if (checkOut && next >= checkOut) {
+                            const d = new Date(date);
+                            d.setDate(d.getDate() + 1);
+                            setCheckOut(d.toISOString().slice(0, 10));
+                          }
+                        } else {
+                          setCheckOut(next);
+                        }
+                      }
+                      setDatePickerMode(null);
+                    }}
+                    style={stylesWithTheme.datePickerInline}
+                  />
+                </View>
+              ))}
           </View>
-        </View>
 
-        <View style={stylesWithTheme.card}>
-          <Text style={stylesWithTheme.label}>Payment status</Text>
-          <View style={stylesWithTheme.pickerRow}>
-            {PAYMENT_STATUSES.map((p) => (
-              <TouchableOpacity
-                key={p}
-                style={[
-                  stylesWithTheme.pickerOption,
-                  paymentStatus === p && stylesWithTheme.pickerOptionSelected,
-                ]}
-                onPress={() => setPaymentStatus(p)}
-                disabled={saving}
-              >
-                <Text
+          <View style={stylesWithTheme.card}>
+            <Text style={stylesWithTheme.label}>Booking source</Text>
+            <View style={stylesWithTheme.pickerRow}>
+              {GUEST_SOURCES.map((s) => (
+                <TouchableOpacity
+                  key={s}
                   style={[
-                    stylesWithTheme.pickerOptionText,
-                    paymentStatus === p &&
-                      stylesWithTheme.pickerOptionTextSelected,
+                    stylesWithTheme.pickerOption,
+                    source === s && stylesWithTheme.pickerOptionSelected,
                   ]}
+                  onPress={() => setSource(s)}
+                  disabled={saving}
                 >
-                  {p}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    style={[
+                      stylesWithTheme.pickerOptionText,
+                      source === s && stylesWithTheme.pickerOptionTextSelected,
+                    ]}
+                  >
+                    {s}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
-        </View>
 
-        <View
-          style={stylesWithTheme.card}
-          onLayout={(e) => {
-            sectionTops.current["price"] = e.nativeEvent.layout.y;
-          }}
-        >
-          <Text style={stylesWithTheme.label}>Price / Income</Text>
-          <TextInput
-            style={stylesWithTheme.input}
-            value={price}
-            onChangeText={setPrice}
-            onFocus={() => scrollToSection("price")}
-            placeholder="Optional – for Finance tracking"
-            placeholderTextColor={colors.textSecondary}
-            keyboardType="decimal-pad"
-            editable={!saving}
-          />
-        </View>
+          <View style={stylesWithTheme.card}>
+            <Text style={stylesWithTheme.label}>Payment status</Text>
+            <View style={stylesWithTheme.pickerRow}>
+              {PAYMENT_STATUSES.map((p) => (
+                <TouchableOpacity
+                  key={p}
+                  style={[
+                    stylesWithTheme.pickerOption,
+                    paymentStatus === p && stylesWithTheme.pickerOptionSelected,
+                  ]}
+                  onPress={() => setPaymentStatus(p)}
+                  disabled={saving}
+                >
+                  <Text
+                    style={[
+                      stylesWithTheme.pickerOptionText,
+                      paymentStatus === p &&
+                        stylesWithTheme.pickerOptionTextSelected,
+                    ]}
+                  >
+                    {p}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
 
-        <View
-          style={stylesWithTheme.card}
-          onLayout={(e) => {
-            sectionTops.current["notes"] = e.nativeEvent.layout.y;
-          }}
-        >
-          <Text style={stylesWithTheme.label}>Notes</Text>
-          <TextInput
+          <View
+            style={stylesWithTheme.card}
+            onLayout={(e) => {
+              sectionTops.current["price"] = e.nativeEvent.layout.y;
+            }}
+          >
+            <Text style={stylesWithTheme.label}>Price / Income</Text>
+            <TextInput
+              style={stylesWithTheme.input}
+              value={price}
+              onChangeText={setPrice}
+              onFocus={() => scrollToSection("price")}
+              placeholder="Optional – for Finance tracking"
+              placeholderTextColor={colors.textSecondary}
+              keyboardType="decimal-pad"
+              editable={!saving}
+            />
+          </View>
+
+          <View
+            style={stylesWithTheme.card}
+            onLayout={(e) => {
+              sectionTops.current["notes"] = e.nativeEvent.layout.y;
+            }}
+          >
+            <Text style={stylesWithTheme.label}>Notes</Text>
+            <TextInput
+              style={[
+                stylesWithTheme.input,
+                { minHeight: 80, textAlignVertical: "top" },
+              ]}
+              value={notes}
+              onChangeText={setNotes}
+              onFocus={() => scrollToSection("notes")}
+              placeholder="Optional notes"
+              placeholderTextColor={colors.textSecondary}
+              multiline
+              editable={!saving}
+            />
+          </View>
+
+          <TouchableOpacity
             style={[
-              stylesWithTheme.input,
-              { minHeight: 80, textAlignVertical: "top" },
+              stylesWithTheme.saveBtn,
+              (!canSave || saving || (isEditMode && !editLoaded)) &&
+                stylesWithTheme.saveBtnDisabled,
             ]}
-            value={notes}
-            onChangeText={setNotes}
-            onFocus={() => scrollToSection("notes")}
-            placeholder="Optional notes"
-            placeholderTextColor={colors.textSecondary}
-            multiline
-            editable={!saving}
-          />
-        </View>
-
-        <TouchableOpacity
-          style={[
-            stylesWithTheme.saveBtn,
-            (!canSave || saving || (isEditMode && !editLoaded)) && stylesWithTheme.saveBtnDisabled,
-          ]}
-          onPress={handleSave}
-          disabled={!canSave || saving || (isEditMode && !editLoaded)}
-          activeOpacity={0.8}
-        >
-          {saving ? (
-            <ActivityIndicator color={colors.primaryText} />
-          ) : (
-            <Text style={stylesWithTheme.saveBtnText}>{isEditMode ? "Save changes" : "Save guest"}</Text>
-          )}
-        </TouchableOpacity>
+            onPress={handleSave}
+            disabled={!canSave || saving || (isEditMode && !editLoaded)}
+            activeOpacity={0.8}
+          >
+            {saving ? (
+              <ActivityIndicator color={colors.primaryText} />
+            ) : (
+              <Text style={stylesWithTheme.saveBtnText}>
+                {isEditMode ? "Save changes" : "Save guest"}
+              </Text>
+            )}
+          </TouchableOpacity>
         </ScrollView>
       </View>
     </KeyboardAvoidingView>
