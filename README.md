@@ -62,3 +62,4 @@ MVP mobile app for a single owner managing guesthouses and apartments. Built wit
 - Add and edit properties and units from the app
 - Native date pickers for check-in/check-out
 - Offline persistence (e.g. enable Firestore offline)
+# property-manage
